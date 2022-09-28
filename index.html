@@ -18,9 +18,11 @@
             integrity="sha512-uXfi0GwpQZcHIhGOMMHeNYtBSjt7qDXjXHmjShWSp+RWMSmjdy69N7M/pufinvQLv6rSYlpbSXqSnLRzWE952w=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-hierarchy@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.6.1/dist/d3.min.js"></script>
 
     <script src="./js/mappings.js"></script>
+    <script src="./js/miserables.js"></script>
+    <script src="./js/ForceGraph.js"></script>
 
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
     <link href="https://unpkg.com/tabulator-tables@5.2.7/dist/css/tabulator_materialize.min.css" rel="stylesheet">
@@ -188,43 +190,7 @@
     /**Current root PID (the one entered at the input field)*/
     let pid = null;
 
-    function addMessage(type, message) {
-        let element = $("#messages");
-        let div = document.createElement('div');
-        let messageType = "positive";
-        let messageHeader = "Information";
-        switch (type) {
-            case 1: {
-                messageType = "negative";
-                messageHeader = "Error";
-            }
-        }
-
-        let uuid = create_UUID();
-        div.setAttribute("class", "ui " + messageType + " message");
-        div.setAttribute("id", uuid);
-        div.innerHTML =
-            "<i class='close icon' onclick='closeMessage(\"" + uuid + "\")'></i>" +
-            "<div class='header'>" +
-            messageHeader +
-            "</div>" +
-            "<p>" + message + "</p>";
-
-        element.prepend(div);
-    }
-
-    /**UUID creation helper for creating unique instances of Ace editor and message elements.*/
-    function create_UUID() {
-        let dt = new Date().getTime();
-        let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            let r = (dt + Math.random() * 16) % 16 | 0;
-            dt = Math.floor(dt / 16);
-            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-        });
-        return uuid;
-    }
-
-
+    let data = {"nodes":[], "links":[]};
 
 
     /**Renderer function for PID record table cells. This function is used on the one hand for the type column to
@@ -233,7 +199,6 @@
      * @param {string} selection The selected object obtained from the table.
      */
     function renderCell(selection) {
-
         let value = selection._cell.value;
 
         if(selection._cell.column.field == "type"){
@@ -248,91 +213,31 @@
                 return obj.renderer(value);
             }
         }
-
-       /* let urlRegEx = new RegExp("(http|https):\\/\\/(.+)");
-        let pidRegEx = new RegExp("([A-Za-z0-9.]+)/([A-Za-z0-9.]+)");
-        if (urlRegEx.test(value)) {
-            //URL value
-            return "<a href='" + value + "' target='_blank'>" + value + "</a>";
-        } else if (pidRegEx.test(value) && selection._cell.column.field === "data.value") {
-            //PID value
-            let isFairDO = false;
-            let profilePid = null;
-            $.ajax({
-                url: "https://hdl.handle.net/api/handles/" + value,
-                async: false,
-                success: function (json, status) {
-                      for(let i=0;i<json.values.length;i++){
-                        if (json.values[i].type === "21.T11148/076759916209e5d62bd5") {
-                            //has profile property, is FAIR DO
-                            profilePid = json.values[i].data.value;
-                            isFairDO = true;
-                        }
-                    }
-                }
-            });
-
-            if (isFairDO == false) {
-                //DataType -> redirect to DTR
-                //might be also other PID -> How to check?
-                return "<a href='https://dtr-test.pidconsortium.eu/#objects/" + value + "' target='_blank'>" + value + "</a>";
-            } else {
-                //FAIR DO -> load table from it
-                addChildFdo(value, profilePid, pid);
-                return "<a href='#' onClick=resolveFDO(\'" + value + "\')>" + value + "&nbsp;<i class=\"fa-solid fa-arrows-rotate\"></i></a>";
-            }
-        }*/
-
-        //only for type column handling to map PIDs to human-readable type names for known types
-      /*  if (dataTypes.has(value)) {
-            let obj = dataTypes.get(value);
-            return "<a href='https://dtr-test.pidconsortium.eu/#objects/" + value + "' target='_blank'><i class='" + obj.class + "'>&nbsp;</i>" + obj.name + "</a>";
-        }
-
-        if (typeof value == 'string' && value.startsWith("{")) {
-            let id = create_UUID();
-            new Promise(resolve => {
-                setTimeout(() => {
-                    showEditor(id);
-                    resolve('resolved');
-                }, 1000);
-            });
-
-            return "<div id='" + id + "' style='height:75px'>" + value + "</div>"
-        }*/
         return value;
     }
 
-
-
-
-
-
-
-
-
-    /**Show a single Ace editor instance for the element with the provided id.
-     * @param {string} id The id (a UUID) of the table cell element to show the editor at.
-     */
-    function showEditor(id) {
-        let beautify = ace.require("ace/ext/beautify"); // get reference to extension
-        editor = ace.edit(id);
-        //editor.setTheme("ace/theme/monokai");
-        editor.session.setMode("ace/mode/json");
-        beautify.beautify(editor.session);
-    }
-
-    /**Add a child FDO. This function is called if the rendering function detects an FDO in one the the value fields of
+     /**Add a child FDO. This function is called if the rendering function detects an FDO in one the the value fields of
      * the PID record. In that case, a new FDO is added to the FDO graph and the graph gets updated.
      * @param {string} fdoPid The PID of the newly detected FDO.
      * @param {string} parentPid The PID of the parent FDO.
      */
     function addChildFdo(fdoPid, profile, parentPid) {
         addMessage("Adding child FDO with pid " + fdoPid + " to parent " + parentPid);
-        if (!fdoList.includes(fdoPid)) {
-            let node = {"id": fdoPid, "parentId": parentPid, "profilePid": profile};
-            treeData.push(node);
-            fdoList.push( fdoPid );
+
+        let existing = data.nodes.find((entry) => entry.id == fdoPid);
+
+        if(!existing){
+            let node = {"id":fdoPid, "profile": profile};
+            data.nodes.push(node);
+            let link = {"source":parentPid, "target":fdoPid, "value":1};
+            data.links.push(link);
+        }else{
+            let existingConnection = data.links.find((entry) => (entry.source == parentPid && entry.target == fdoPid));
+
+            if(!existingConnection){
+                let link = {"source":parentPid, "target":fdoPid, "value":0};
+                data.links.push(link);
+            }
         }
 
         if(!fdoHistory.includes(fdoPid)) {
@@ -371,7 +276,15 @@
         }
 
         addMessage(0, "Loading FDO from user-provided PID " + pid);
-        fdoList = [pid];
+
+
+        let existing = data.nodes.find((entry) => entry.id == pid);
+
+        if(!existing){
+            let node = {"id":pid, "profile": profilePid};
+            data.nodes.push(node);
+        }
+
         if (!fdoHistory.includes(pid)) {
             fdoHistory.push(pid);
             localStorage.setItem("fdoHistory", JSON.stringify(fdoHistory));
@@ -440,83 +353,16 @@
 
     /**Render the current FDO graph.*/
     function renderTree() {
-        if (svg) {
-            svg.selectAll('*').remove();
-        }
-        let i = 0;
-        svg = d3.select("svg")
-            .attr("width", width + margin.right + margin.left)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        //create proper data structure
-        let root = d3.stratify()(treeData);
-
-        //obtain all nodes an links
-        let nodes = tree.nodes(root).reverse(),
-            links = tree.links(nodes);
-
-        // Normalize for fixed-depth.
-        nodes.forEach(function (d) {
-            d.y = 10 + d.depth * 100;
+       d3.select("svg").selectAll('*').remove();
+        ForceGraph(data, {
+            nodeId: d => d.id,
+            nodeGroup: d => d.profile,
+            nodeTitle: d => `PID: ${d.id}\nProfile: ${d.profile}`,
+            linkStrokeWidth: l => Math.sqrt(l.value),
+            width,
+            height: 600,
+           undefined
         });
-
-        // Assign ids to nodes
-        let node = svg.selectAll("g.node").data(nodes, function (d) {
-            return d.id || (d.id = ++i);
-        });
-
-        // Enter the nodes.
-        let nodeEnter = node.enter().append("g")
-            .attr("class", "node")
-            .attr("transform", function (d) {
-                return "translate(" + d.x + "," + (10 + d.y) + ")";
-            });
-
-        //draw nodes
-        nodeEnter.append("circle").attr("r", 10).attr('stroke-width', 1).attr("stroke", function(d){
-            if(d.id === pid){
-                return "red"
-            }else{
-                return "lightgray";
-            }
-        }).style("fill", function(d){
-            return profiles.get(d.data.profilePid) ? profiles.get(d.data.profilePid):"#fff";
-        }).on("click", click);
-
-        //add labels to nodes
-        nodeEnter.append("text").attr("y", function (d) {
-            return d.children || d._children ? -28 : 18;
-        })
-            .attr("dy", ".35em")
-            .attr("text-anchor", "middle")
-            .style("font-size", "12px")
-            .style("fill-opacity", 1)
-            .text(function (d) {
-                return d.id.split("/")[0];
-            });
-
-        nodeEnter.append("text").attr("y", function (d) {
-            return d.children || d._children ? -28 : 18;
-        })
-            .attr("dy", "1.35em")
-            .attr("text-anchor", "middle")
-            .style("font-size", "12px")
-            .style("fill-opacity", 1)
-            .text(function (d) {
-                return d.id.split("/")[1];
-            });
-
-        // Declare the links…
-        let link = svg.selectAll("path.link").data(links, function (d) {
-            return d.target.id;
-        });
-
-        // Enter the links.
-        link.enter().insert("path", "g")
-            .attr("class", "link")
-            .attr("d", diagonal);
     }
 
  mainMethod(options);
@@ -537,11 +383,6 @@
 
         $( "#pid_input" ).autocomplete({
             source: fdoHistory
-        });
-        tree = d3.layout.tree().size([height, width]);
-
-        diagonal = d3.svg.diagonal().projection(function (d) {
-            return [d.x, d.y];
         });
 
         renderTree();
@@ -566,6 +407,43 @@
         }
         });
  
+    }
+
+    /**UUID creation helper for creating unique instances of Ace editor and message elements.*/
+    function create_UUID() {
+        let dt = new Date().getTime();
+        let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            let r = (dt + Math.random() * 16) % 16 | 0;
+            dt = Math.floor(dt / 16);
+            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+        return uuid;
+    }
+
+
+    function addMessage(type, message) {
+        let element = $("#messages");
+        let div = document.createElement('div');
+        let messageType = "positive";
+        let messageHeader = "Information";
+        switch (type) {
+            case 1: {
+                messageType = "negative";
+                messageHeader = "Error";
+            }
+        }
+
+        let uuid = create_UUID();
+        div.setAttribute("class", "ui " + messageType + " message");
+        div.setAttribute("id", uuid);
+        div.innerHTML =
+            "<i class='close icon' onclick='closeMessage(\"" + uuid + "\")'></i>" +
+            "<div class='header'>" +
+            messageHeader +
+            "</div>" +
+            "<p>" + message + "</p>";
+
+        element.prepend(div);
     }
 
     /**Callback for closing a single message.
@@ -598,8 +476,8 @@
     }
 
     // Toggle children on click.
-    function click(d) {
-        resolveFDO(d.id);
+    function click(d, e) {
+        resolveFDO(e.id);
     }
 </script>
 

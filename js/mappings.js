@@ -73,13 +73,16 @@ dataTypes.set("digitalObjectSubtype", {'name': 'digitalObjectSubtype', 'class':'
 
 let profiles = new Map();
 //Helmholtz KIP
-profiles.set("21.T11148/863d938d632b53d62d52", "#EE7222");
+profiles.set("21.T11148/863d938d632b53d62d52", "#ee7222");
 //Helmholtz KIP annotation
-profiles.set("21.T11148/828b74888f3774d97f73", "#FFA222");
+profiles.set("21.T11148/828b74888f3774d97f73", "#ffa222");
 //Helmholtz KIP MultiType
-profiles.set("21.T11148/863d938d632b53d62d52", "#FFB266");
+profiles.set("21.T11148/863d938d632b53d62d52", "#ffb266");
 //Image Type
-profiles.set("21.T11148/0e76292794888d4f1fa7", "#00FF66");
+profiles.set("21.T11148/0e76292794888d4f1fa7", "#00ff66");
 //JSON File
-profiles.set("21.T11148/91cc47c47bbd1eb8b943", "#AAFF66");
+profiles.set("21.T11148/91cc47c47bbd1eb8b943", "#aaff66");
+//File
+profiles.set("21.T11148/2c3cafa4db3f3e1e51b3", "#aadd99");
+
 
