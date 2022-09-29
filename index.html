@@ -210,7 +210,7 @@
             let type = selection._cell.row.cells[1].value;
             if (dataTypes.has(type)) {
                 let obj = dataTypes.get(type);
-                return obj.renderer(value);
+                return obj.renderer(type, value);
             }
         }
         return value;
@@ -221,22 +221,32 @@
      * @param {string} fdoPid The PID of the newly detected FDO.
      * @param {string} parentPid The PID of the parent FDO.
      */
-    function addChildFdo(fdoPid, profile, parentPid) {
+    function addChildFdo(type, fdoPid, profile, parentPid) {
         addMessage("Adding child FDO with pid " + fdoPid + " to parent " + parentPid);
 
         let existing = data.nodes.find((entry) => entry.id == fdoPid);
-
+    let modified = false;
         if(!existing){
             let node = {"id":fdoPid, "profile": profile};
             data.nodes.push(node);
-            let link = {"source":parentPid, "target":fdoPid, "value":1};
+            let typeName = (dataTypes.get(type))?dataTypes.get(type).name:type;
+            let link = {"source":parentPid, "target":fdoPid, "type": typeName, "value":1};
             data.links.push(link);
+            modified = true;
         }else{
-            let existingConnection = data.links.find((entry) => (entry.source == parentPid && entry.target == fdoPid));
+            let existingConnection = data.links.find((entry) => (entry.source == parentPid && entry.target == fdoPid) || (entry.target == parentPid && entry.source == fdoPid));
 
             if(!existingConnection){
-                let link = {"source":parentPid, "target":fdoPid, "value":0};
+                let typeName = (dataTypes.get(type))?dataTypes.get(type).name:type;
+                let link = {"source":parentPid, "target":fdoPid, "type": typeName, "value":1};
                 data.links.push(link);
+                modified = true;
+            }else{
+                let nextTypeName = (dataTypes.get(type))?dataTypes.get(type).name:type;
+                if(existingConnection.type.indexOf(nextTypeName) == -1) {
+                    existingConnection.type = existingConnection.type + " | " + nextTypeName;
+                    modified = true;
+                }
             }
         }
 
@@ -245,7 +255,9 @@
             localStorage.setItem("fdoHistory", JSON.stringify(fdoHistory));
         }
 
-        renderTree();
+        if(modified) {
+            renderTree();
+        }
     }
 
     /**Callback for the input field triggered if the search is triggered. This function resets the current FDO graph
@@ -308,8 +320,11 @@
     function resolveFDO(fdo) {
         addMessage(0, "Resolving new FDO with PID " + fdo);
         pid = fdo;
-        table.replaceData("https://hdl.handle.net/api/handles/" + fdo).then(function(){
-            renderTree();
+
+        table.replaceData("https://hdl.handle.net/api/handles/" + fdo).then(function() {
+          /*if (!existing) {
+               renderTree();
+          }*/
         }).catch(function(error){
             addMessage(1, "Failed to load FDO record from https://hdl.handle.net/api/handles/" + fdo);
         });
@@ -353,7 +368,7 @@
 
     function createFdoNodeName(d){
         let profileName = profiles.get(d.profile) ? profiles.get(d.profile).name : d.profile
-        return `PID: ${d.id}\nProfile:${profileName}` ;
+        return `PID: ${d.id}\nProfile: ${profileName}`;
     }
 
     /**Render the current FDO graph.*/

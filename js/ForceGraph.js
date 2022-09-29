@@ -13,15 +13,15 @@ function ForceGraph({
                         nodeStroke = "#fff", // node stroke color
                         nodeStrokeWidth = 1.5, // node stroke width, in pixels
                         nodeStrokeOpacity = 1, // node stroke opacity
-                        nodeRadius = 20, // node radius, in pixels
-                        nodeStrength = -40,
+                        nodeRadius = 10, // node radius, in pixels
+                        nodeStrength = -100,
                         linkSource = ({source}) => source, // given d in links, returns a node identifier string
                         linkTarget = ({target}) => target, // given d in links, returns a node identifier string
                         linkStroke = "#999", // link stroke color
                         linkStrokeOpacity = 0.6, // link stroke opacity
                         linkStrokeWidth = 1.5, // given d in links, returns a stroke width in pixels
                         linkStrokeLinecap = "round", // link stroke linecap
-                        linkStrength = .01,
+                        linkStrength = .005,
                         colors = d3.schemeTableau10, // an array of color strings, for the node groups
                         width = 640, // outer width, in pixels
                         height = 400, // outer height, in pixels
@@ -31,6 +31,7 @@ function ForceGraph({
     const N = d3.map(nodes, nodeId).map(intern);
     const LS = d3.map(links, linkSource).map(intern);
     const LT = d3.map(links, linkTarget).map(intern);
+    const TT = d3.map(links, ({type}) => type).map(intern);
     if (nodeTitle === undefined) nodeTitle = (_, i) => N[i];
     const T = nodeTitle == null ? null : d3.map(nodes, nodeTitle);
     const G = nodeGroup == null ? null : d3.map(nodes, nodeGroup);
@@ -46,13 +47,12 @@ function ForceGraph({
     const color = nodeGroup == null ? null : d3.scaleOrdinal(nodeGroups, colors);
 
     // Construct the forces.
-
     const forceNode = d3.forceManyBody();
     const forceLink = d3.forceLink(links).id(({index: i}) => N[i]);
     if (nodeStrength !== undefined) forceNode.strength(nodeStrength);
     if (linkStrength !== undefined) forceLink.strength(linkStrength);
     const forceCenter = d3.forceCenter();
-    forceCenter.strength(0.01);
+    forceCenter.strength(.01);
 
     const simulation = d3.forceSimulation(nodes)
         .force("collide", d3.forceCollide().radius(20))
@@ -76,6 +76,20 @@ function ForceGraph({
         .data(links)
         .join("line");
 
+    const label = svg.append("g")
+        .attr("color", "#000000")
+        .selectAll("text")
+        .data(links)
+        .join("text")
+        .attr('text-anchor', 'middle')
+        .attr('font-size', function(d) {
+            return 5;
+        })
+        .text(function(d) {
+            return "label 213 123 12 3";
+        })
+        .call(drag(simulation));
+
     const node = svg.append("g")
         .attr("fill", nodeFill)
         .attr("stroke", nodeStroke)
@@ -88,15 +102,15 @@ function ForceGraph({
         .call(drag(simulation))
         .on("click", click);
 
-const text = svg.append("g")
+    const text = svg.append("g")
     .attr("color", "#000000")
     .selectAll("text")
     .data(nodes)
     .join("text")
-        //.attr("text-anchor", "middle")
+        .attr("text-anchor", "middle")
         .attr('font-family', 'FontAwesome')
         .attr('font-size', function(d) {
-            return 20;
+            return 10;
         })
         .text(function(d) {
             return '\uf118'
@@ -105,21 +119,37 @@ const text = svg.append("g")
 
     svg.call(d3.zoom()
         .extent([[-width / 2, -height / 2], [width, height]])
-        .scaleExtent([1, 8])
+        .scaleExtent([0, 8])
         .on("zoom", zoomed));
 
     function zoomed({transform}) {
         link.attr("transform", transform);
         node.attr("transform", transform);
         text.attr("transform", transform);
+        label.attr("transform", transform);
     }
 
 
     if (W) link.attr("stroke-width", ({index: i}) => W[i]);
     if (L) link.attr("stroke", ({index: i}) => L[i]);
-    if (G) node.attr("fill", ({index: i}) => {return profiles.get(G[i]).color;});
+    if (G) node.attr("fill", ({index: i}) => {
+        if(profiles.get(G[i])){
+            return profiles.get(G[i]).color;
+        }else{
+            return "#0000FF";
+        }
+    });
     if (G) text.text(function({index: i}) {
-        return profiles.get(G[i]).icon;
+        if(profiles.get(G[i])){
+            return profiles.get(G[i]).icon;
+        }else{
+            return "\uf118";
+        }
+    });
+
+    if (TT) label.text(function({index: i}) {
+            return TT[i];
+
     });
 
 
@@ -141,10 +171,13 @@ const text = svg.append("g")
             .attr("cx", d => d.x)
             .attr("cy", d => d.y);
 
-       /* text
-            .attr("x", d => {return d.x-3;})
-            .attr("y", d => {return d.y+3;});*/
+       text
+            .attr("x", d => {return d.x;})
+            .attr("y", d => {return d.y+4;});
 
+       label
+           .attr("x", d => {return (d.target.x + d.source.x )/2;})
+           .attr("y", d => {return (d.target.y + d.source.y )/2;});
     }
 
     function drag(simulation) {

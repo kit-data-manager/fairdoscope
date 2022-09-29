@@ -1,8 +1,8 @@
-function renderUrl(value){
+function renderUrl(type,value){
     return "<a href='" + value + "' target='_blank'>" + value + "</a>";
 }
 
-function renderHdl(value){
+function renderHdl(type,value){
 
     let isType = false;
     let isFairDO = false;
@@ -30,16 +30,16 @@ function renderHdl(value){
         //TODO: Check if alternate location (view=ui) can be adressed instead of hardcoded link to GWDG
         return "<a href='https://dtr-test.pidconsortium.eu/#objects/" + value + "' target='_blank'>" + value + "</a>";
     }else if(isFairDO) {
-        addChildFdo(value, profilePid, pid);
+        addChildFdo(type, value, profilePid, pid);
         return "<a href='#' onClick=resolveFDO(\'" + value + "\')>" + value + "&nbsp;<i class=\"fa-solid fa-arrows-rotate\"></i></a>";
     }
 }
 
-function renderText(value){
+function renderText(type, value){
     return value;
 }
 
-function renderObject(value){
+function renderObject(type,value){
     let obj = JSON.parse(value);
     //TODO: Check id...currently, obtained value is https://hdl.handle.net/21...
     //obj.id.substr(obj.id.lastIndexOf(".net/") + 5)
@@ -73,7 +73,7 @@ dataTypes.set("digitalObjectSubtype", {'name': 'digitalObjectSubtype', 'class':'
 
 let profiles = new Map();
 //Helmholtz KIP
-profiles.set("21.T11148/863d938d632b53d62d52", {"name": "HelmholtzKIP", "color": "#ee7222", "icon": "\uf118"});
+profiles.set("21.T11148/b9b76f887845e32d29f7", {"name": "HelmholtzKIP", "color": "#ee7222", "icon": "\u0048"});
 //Helmholtz KIP annotation
 profiles.set("21.T11148/828b74888f3774d97f73", {"name": "HelmholtzKIP for Annotation", "color": "#ffa222", "icon": "\uf02b"});
 //Helmholtz KIP MultiType
