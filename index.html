@@ -351,13 +351,18 @@
         }
     }
 
+    function createFdoNodeName(d){
+        let profileName = profiles.get(d.profile) ? profiles.get(d.profile).name : d.profile
+        return `PID: ${d.id}\nProfile:${profileName}` ;
+    }
+
     /**Render the current FDO graph.*/
     function renderTree() {
        d3.select("svg").selectAll('*').remove();
         ForceGraph(data, {
             nodeId: d => d.id,
             nodeGroup: d => d.profile,
-            nodeTitle: d => `PID: ${d.id}\nProfile: ${d.profile}`,
+            nodeTitle: d => createFdoNodeName(d),
             linkStrokeWidth: l => Math.sqrt(l.value),
             width,
             height: 600,

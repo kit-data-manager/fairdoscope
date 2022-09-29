@@ -73,16 +73,16 @@ dataTypes.set("digitalObjectSubtype", {'name': 'digitalObjectSubtype', 'class':'
 
 let profiles = new Map();
 //Helmholtz KIP
-profiles.set("21.T11148/863d938d632b53d62d52", "#ee7222");
+profiles.set("21.T11148/863d938d632b53d62d52", {"name": "HelmholtzKIP", "color": "#ee7222", "icon": "\uf118"});
 //Helmholtz KIP annotation
-profiles.set("21.T11148/828b74888f3774d97f73", "#ffa222");
+profiles.set("21.T11148/828b74888f3774d97f73", {"name": "HelmholtzKIP for Annotation", "color": "#ffa222", "icon": "\uf02b"});
 //Helmholtz KIP MultiType
-profiles.set("21.T11148/863d938d632b53d62d52", "#ffb266");
+profiles.set("21.T11148/863d938d632b53d62d52", {"name": "HelmholtzKIP for Multitype", "color": "#ffb266", "icon": "\uf126"});
 //Image Type
-profiles.set("21.T11148/0e76292794888d4f1fa7", "#00ff66");
+profiles.set("21.T11148/0e76292794888d4f1fa7", {"name": "Image", "color": "#00ff66", "icon": "\uf03e"});
 //JSON File
-profiles.set("21.T11148/91cc47c47bbd1eb8b943", "#aaff66");
+profiles.set("21.T11148/91cc47c47bbd1eb8b943", {"name": "JSON", "color": "#aaff66", "icon": "\uf1c9"});
 //File
-profiles.set("21.T11148/2c3cafa4db3f3e1e51b3", "#aadd99");
+profiles.set("21.T11148/2c3cafa4db3f3e1e51b3", {"name": "File", "color": "#aadd99", "icon": "\uf15b"});
 
 

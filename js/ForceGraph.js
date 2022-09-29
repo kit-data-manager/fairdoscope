@@ -13,15 +13,15 @@ function ForceGraph({
                         nodeStroke = "#fff", // node stroke color
                         nodeStrokeWidth = 1.5, // node stroke width, in pixels
                         nodeStrokeOpacity = 1, // node stroke opacity
-                        nodeRadius = 5, // node radius, in pixels
-                        nodeStrength,
+                        nodeRadius = 20, // node radius, in pixels
+                        nodeStrength = -40,
                         linkSource = ({source}) => source, // given d in links, returns a node identifier string
                         linkTarget = ({target}) => target, // given d in links, returns a node identifier string
                         linkStroke = "#999", // link stroke color
                         linkStrokeOpacity = 0.6, // link stroke opacity
                         linkStrokeWidth = 1.5, // given d in links, returns a stroke width in pixels
                         linkStrokeLinecap = "round", // link stroke linecap
-                        linkStrength,
+                        linkStrength = .01,
                         colors = d3.schemeTableau10, // an array of color strings, for the node groups
                         width = 640, // outer width, in pixels
                         height = 400, // outer height, in pixels
@@ -29,7 +29,6 @@ function ForceGraph({
                     } = {}) {
     // Compute values.
     const N = d3.map(nodes, nodeId).map(intern);
-    console.log(N);
     const LS = d3.map(links, linkSource).map(intern);
     const LT = d3.map(links, linkTarget).map(intern);
     if (nodeTitle === undefined) nodeTitle = (_, i) => N[i];
@@ -43,20 +42,23 @@ function ForceGraph({
     // Compute default domains.
     if (G && nodeGroups === undefined) nodeGroups = d3.sort(G);
 
-
     // Construct the scales.
     const color = nodeGroup == null ? null : d3.scaleOrdinal(nodeGroups, colors);
 
     // Construct the forces.
+
     const forceNode = d3.forceManyBody();
     const forceLink = d3.forceLink(links).id(({index: i}) => N[i]);
     if (nodeStrength !== undefined) forceNode.strength(nodeStrength);
     if (linkStrength !== undefined) forceLink.strength(linkStrength);
+    const forceCenter = d3.forceCenter();
+    forceCenter.strength(0.01);
 
     const simulation = d3.forceSimulation(nodes)
+        .force("collide", d3.forceCollide().radius(20))
         .force("link", forceLink)
         .force("charge", forceNode)
-        .force("center",  d3.forceCenter())
+        .force("center",  forceCenter)
         .on("tick", ticked);
 
     const svg = d3.select("svg")
@@ -83,7 +85,23 @@ function ForceGraph({
         .data(nodes)
         .join("circle")
         .attr("r", nodeRadius)
-        .call(drag(simulation)).on("click", click);
+        .call(drag(simulation))
+        .on("click", click);
+
+const text = svg.append("g")
+    .attr("color", "#000000")
+    .selectAll("text")
+    .data(nodes)
+    .join("text")
+        //.attr("text-anchor", "middle")
+        .attr('font-family', 'FontAwesome')
+        .attr('font-size', function(d) {
+            return 20;
+        })
+        .text(function(d) {
+            return '\uf118'
+        }).on("click", click);
+
 
     svg.call(d3.zoom()
         .extent([[-width / 2, -height / 2], [width, height]])
@@ -93,12 +111,18 @@ function ForceGraph({
     function zoomed({transform}) {
         link.attr("transform", transform);
         node.attr("transform", transform);
+        text.attr("transform", transform);
     }
 
 
     if (W) link.attr("stroke-width", ({index: i}) => W[i]);
     if (L) link.attr("stroke", ({index: i}) => L[i]);
-    if (G) node.attr("fill", ({index: i}) => {return profiles.get(G[i]);});
+    if (G) node.attr("fill", ({index: i}) => {return profiles.get(G[i]).color;});
+    if (G) text.text(function({index: i}) {
+        return profiles.get(G[i]).icon;
+    });
+
+
     if (T) node.append("title").text(({index: i}) => T[i]);
     if (invalidation != null) invalidation.then(() => simulation.stop());
 
@@ -116,6 +140,11 @@ function ForceGraph({
         node
             .attr("cx", d => d.x)
             .attr("cy", d => d.y);
+
+       /* text
+            .attr("x", d => {return d.x-3;})
+            .attr("y", d => {return d.y+3;});*/
+
     }
 
     function drag(simulation) {
