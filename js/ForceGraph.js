@@ -149,7 +149,6 @@ function ForceGraph({
 
     if (TT) label.text(function({index: i}) {
             return TT[i];
-
     });
 
 
