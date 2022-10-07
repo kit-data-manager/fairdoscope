@@ -16,3 +16,7 @@
     stroke: #ccc;
     stroke-width: 2px;
 }
+
+.tooltip{
+    font-size: smaller;
+}

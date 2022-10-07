@@ -25,10 +25,14 @@ function ArcGraph({
                         invalidation // when this promise resolves, stop the simulation
                     } = {}) {
     const L = data.links.map(d => Object.create(d));
-    const N = data.nodes.map(d => Object.create(d));
+    const N = data.nodes.map(intern);
     const TT = d3.map(links, ({type}) => type).map(intern);
     const G = nodeGroup == null ? null : d3.map(nodes, nodeGroup);
     const profs = Array.from(new Set(G));
+
+    function intern(value) {
+        return value !== null && typeof value === "object" ? value.valueOf() : value;
+    }
 
     const types = Array.from(new Set(links.map(d => d.type)));
     let color = d3.scaleOrdinal(types, d3.schemeCategory10);
@@ -37,7 +41,6 @@ function ArcGraph({
         .force("charge", d3.forceManyBody().strength(-400))
         .force("x", d3.forceX())
         .force("y", d3.forceY());
-
 
     let drag = simulation => {
 
@@ -68,6 +71,40 @@ function ArcGraph({
         .attr("viewBox", [-width / 2, -height / 2, width, height])
         .style("font", "12px sans-serif");
 
+
+    var tooltip = d3.select("body")
+        .append("div")
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "white")
+        .style("border", "solid")
+        .style("border-width", "1px")
+        .style("border-radius", "5px")
+        .style("padding", "10px");
+
+    var mouseover = function(d) {
+        tooltip
+            .style("opacity", 1)
+            .style("position", "absolute")
+            .style("z-index", "100");
+    }
+
+    var mousemove = function(d) {
+        console.log(this.__data__);
+        tooltip
+            .html("PID: " + this.__data__.id + "<br>Profile:" + this.__data__.profile)
+            .style("left", d.screenX + "px")
+            .style("top", d.screenY + "px")
+    }
+
+    // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+    var mouseleave = function(d) {
+        tooltip
+            .transition()
+            .duration(200)
+            .style("opacity", 0)
+    }
+
     // Per-type markers, as they don't inherit styles.
     svg.append("defs").selectAll("marker")
         .data(types)
@@ -90,6 +127,7 @@ function ArcGraph({
         .data(L)
         .join("path")
         .attr("stroke", d => color(d.type))
+        .attr("type", d => d.type)
         .attr("marker-end", d => `url(${new URL(`#arrow-${d.type}`, location)})`);
 
     const node = svg.append("g")
@@ -101,9 +139,30 @@ function ArcGraph({
         .join("circle")
         .attr("stroke", "white")
         .attr("stroke-width", 1.5)
-        .attr("r", nodeRadius)
+        .attr("r", function(d){
+            if(d.id == pid) {
+                return 8;
+            }
+            return nodeRadius;
+        })
         .call(drag(simulation))
-        .on("click", click);
+        .on("click", function(){
+            svg.selectAll("circle").each(function () {
+                let elem = d3.select(this);
+                    elem.transition()
+                        .attr('r', nodeRadius);
+            });
+
+            let elem = d3.select(this);
+                elem.transition()
+                    .attr('r', 8);
+
+            resolveFDO(elem.data()[0].id);
+        });
+        //tooltip if needed
+        /*.on("mouseover", mouseover )
+        .on("mousemove", mousemove )
+        .on("mouseleave", mouseleave );*/
 
     svg.call(d3.zoom()
         .extent([[-width / 2, -height / 2], [width, height]])
@@ -152,7 +211,7 @@ function ArcGraph({
         .attr("cx", -width / 2 + 10)
         .attr("cy", function(d,i){ return -height / 2 + 10 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
         .attr("r", 7)
-        .style("fill", function(d){ return color(d)})
+        .style("fill", function(d){ return color(d)});
 
 // Add one dot in the legend for each name.
     svg.selectAll("typeLabels")
@@ -174,7 +233,27 @@ function ArcGraph({
         .attr("cx", -width / 2 + 210)
         .attr("cy", function(d,i){ return -height / 2 + 10 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
         .attr("r", 7)
-        .style("fill", function(d){ return (profiles.get(d))? profiles.get(d).color : "red"})
+        .style("fill", function(d){ return (profiles.get(d))? profiles.get(d).color : "red"});
+        //FDO-of-Profile highlight if needed
+        /*.on('mouseover', function(d, i) {
+            let selection = this.__data__;
+            svg.selectAll("circle").each(function () {
+               let elem = d3.select(this);
+               if(selection == elem.data()[0].profile){
+                   elem.transition()
+                       .attr('r', nodeRadius * 2);
+               }
+              });
+        }).on('mouseout', function(d, i) {
+        let selection = this.__data__;
+        svg.selectAll("circle").each(function () {
+            let elem = d3.select(this);
+            if(selection == elem.data()[0].profile){
+                elem.transition()
+                    .attr('r', nodeRadius);
+            }
+        });
+    })*/
 
 // Add one dot in the legend for each name.
     svg.selectAll("profileLabels")

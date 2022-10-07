@@ -3,7 +3,6 @@ function renderUrl(type,value){
 }
 
 function renderHdl(type,value){
-
     let isType = false;
     let isFairDO = false;
     let profilePid = null;

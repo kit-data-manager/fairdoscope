@@ -173,9 +173,6 @@
     /**Svg element for rendering 'tree' into*/
     let svg = null;
 
-    /**Tree data object*/
-    let treeData = [
-        {id: "No entry"}];
 
     /**D3 size information*/
     let margin = {top: 20, right: 0, bottom: 20, left: 0},
@@ -223,7 +220,7 @@
         addMessage("Adding child FDO with pid " + fdoPid + " to parent " + parentPid);
 
         let existing = data.nodes.find((entry) => entry.id == fdoPid);
-    let modified = false;
+        let modified = false;
         if(!existing){
             let node = {"id":fdoPid, "profile": profile};
             data.nodes.push(node);
@@ -287,25 +284,18 @@
 
         addMessage(0, "Loading FDO from user-provided PID " + pid);
 
-
-        let existing = data.nodes.find((entry) => entry.id == pid);
-
-        if(!existing){
+        // let existing = data.nodes.find((entry) => entry.id == pid);
+        // if(!existing){
+            //reset data
+            data = {"nodes":[], "links":[]};
             let node = {"id":pid, "profile": profilePid};
             data.nodes.push(node);
-        }
+        // }
 
         if (!fdoHistory.includes(pid)) {
             fdoHistory.push(pid);
             localStorage.setItem("fdoHistory", JSON.stringify(fdoHistory));
         }
-
-        treeData = [
-            {
-                "id": pid,
-                "profilePid": profilePid
-            }
-        ];
 
         resolveFDO(pid);
     }
@@ -323,6 +313,7 @@
           /*if (!existing) {
                renderTree();
           }*/
+            renderTree();
         }).catch(function(error){
             addMessage(1, "Failed to load FDO record from https://hdl.handle.net/api/handles/" + fdo);
         });
