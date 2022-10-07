@@ -83,5 +83,3 @@ profiles.set("21.T11148/0e76292794888d4f1fa7", {"name": "Image", "color": "#7395
 profiles.set("21.T11148/91cc47c47bbd1eb8b943", {"name": "JSON", "color": "#7BAE7F", "icon": "\uf1c9"});
 //File
 profiles.set("21.T11148/2c3cafa4db3f3e1e51b3", {"name": "File", "color": "#95D7AE", "icon": "\uf15b"});
-
-

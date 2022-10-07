@@ -221,6 +221,7 @@
 
         let existing = data.nodes.find((entry) => entry.id == fdoPid);
         let modified = false;
+
         if(!existing){
             let node = {"id":fdoPid, "profile": profile};
             data.nodes.push(node);
@@ -313,7 +314,8 @@
           /*if (!existing) {
                renderTree();
           }*/
-            renderTree();
+         renderTree();
+
         }).catch(function(error){
             addMessage(1, "Failed to load FDO record from https://hdl.handle.net/api/handles/" + fdo);
         });
@@ -373,7 +375,6 @@
             height: 600,
             undefined
         });
-
     }
 
  mainMethod(options);

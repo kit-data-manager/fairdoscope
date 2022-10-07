@@ -113,7 +113,7 @@ function ForceGraph({
             return 10;
         })
         .text(function(d) {
-            return '\uf118'
+            return '\u003f'
         }).on("click", click);
 
 
@@ -143,7 +143,7 @@ function ForceGraph({
         if(profiles.get(G[i])){
             return profiles.get(G[i]).icon;
         }else{
-            return "\uf118";
+            return "\u003f";
         }
     });
 
