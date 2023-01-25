@@ -20,3 +20,14 @@
 .tooltip{
     font-size: smaller;
 }
+
+path {
+    display: block;
+    z-index: 0;
+}
+
+text,
+circle {
+    display: block;
+    z-index: 1000;
+}
