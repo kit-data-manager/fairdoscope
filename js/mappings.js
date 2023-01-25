@@ -55,9 +55,20 @@ dataTypes.set("21.T11148/b8457812905b83046284", {'name': 'digitalObjectLocation'
 dataTypes.set("21.T11148/c692273deb2772da307f", {'name': 'version', 'class':'fa-solid fa-timeline', 'renderer': renderText});
 dataTypes.set("21.T11148/1c699a5d1b4ad3ba4956", {'name': 'digitalObjectType', 'class':'fa-solid fa-file-image', 'renderer': renderHdl});
 dataTypes.set("21.T11148/2f314c8fe5fb6a0063a8", {'name': 'licenseUrl', 'class':'fa-solid fa-closed-captioning', 'renderer': renderUrl});
+dataTypes.set("21.T11148/1a73af9e7ae00182733b", {'name': 'contact', 'class':'fa-solid fa-address-card', 'renderer': renderUrl});
+//Helmholtz-KIP relational attributes
 dataTypes.set("21.T11148/d0773859091aeb451528", {'name': 'hasMetadata', 'class':'fa-solid fa-file-import', 'renderer': renderHdl});
 dataTypes.set("21.T11148/4fe7cde52629b61e3b82", {'name': 'isMetadataFor', 'class':'fa-solid fa-file-export', 'renderer': renderHdl});
-dataTypes.set("21.T11148/1a73af9e7ae00182733b", {'name': 'contact', 'class':'fa-solid fa-address-card', 'renderer': renderUrl});
+dataTypes.set("21.T11148/c6e4c19f294ee6f41b1e", {'name': 'wasDerivedFrom', 'class':'fa-solid fa-address-card', 'renderer': renderHdl});
+dataTypes.set("21.T11148/c085f1292d7d4a338d96", {'name': 'wasGeneratedBy', 'class':'fa-solid fa-address-card', 'renderer': renderHdl});
+dataTypes.set("21.T11148/ab53242825e85a0a7f76", {'name': 'specializationOf', 'class':'fa-solid fa-address-card', 'renderer': renderHdl});
+dataTypes.set("21.T11148/2a1cad55473b20407c78", {'name': 'wasRevisionOf', 'class':'fa-solid fa-address-card', 'renderer': renderHdl});
+dataTypes.set("21.T11148/a753134738da82809fc1", {'name': 'hadPrimarySource', 'class':'fa-solid fa-address-card', 'renderer': renderHdl});
+dataTypes.set("21.T11148/beaeecebec408908de35", {'name': 'wasQuotedFrom', 'class':'fa-solid fa-address-card', 'renderer': renderHdl});
+dataTypes.set("21.T11148/432132bdbd946b2baf2b", {'name': 'alternateOf', 'class':'fa-solid fa-address-card', 'renderer': renderHdl});
+dataTypes.set("21.T11148/af11e18f83466642c47d", {'name': 'provenanceGraph', 'class':'fa-solid fa-address-card', 'renderer': renderHdl});
+
+
 //AI
 dataTypes.set("21.T11148/59071da0d09ae46f1126", {'name': 'label', 'class':'fa-solid fa-tag', 'renderer': renderText});
 dataTypes.set("21.T11148/bca3915764ce207253f5", {'name': 'imageFormat', 'class':'fa-solid fa-image', 'renderer': renderText});
