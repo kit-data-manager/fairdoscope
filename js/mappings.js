@@ -6,11 +6,11 @@ function renderHdl(type,value){
     let isType = false;
     let isFairDO = false;
     let profilePid = null;
-
     $.ajax({
         url: "https://hdl.handle.net/api/handles/" + value,
         async: false,
         success: function (json, status) {
+            console.log(json.values);
             for(let i=0;i<json.values.length;i++){
                 if (json.values[i].type === "21.T11148/076759916209e5d62bd5") {
                     //has profile property, is FAIR DO
@@ -27,7 +27,7 @@ function renderHdl(type,value){
 
     if(isType){
         //TODO: Check if alternate location (view=ui) can be adressed instead of hardcoded link to GWDG
-        return "<a href='https://dtr-test.pidconsortium.eu/#objects/" + value + "' target='_blank'>" + value + "</a>";
+        return "<a href='https://hdl.handle.net/" + value + "?locatt=view:ui' target='_blank'>" + value + "</a>";
     }else if(isFairDO) {
         addChildFdo(type, value, profilePid, pid);
         return "<a href='#' onClick=resolveFDO(\'" + value + "\')>" + value + "&nbsp;<i class=\"fa-solid fa-arrows-rotate\"></i></a>";

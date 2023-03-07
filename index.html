@@ -4,6 +4,9 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>FAIR-DOscope</title>
+    <script src="./js/handle.net_loader.js"></script>
+    <script src="./js/tpm_loader.js"></script>
+
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.2.7/dist/js/tabulator.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
@@ -45,7 +48,7 @@
 
 <div class="ui action input">
     <input id="pid_input" style="width: 428px" type="text"
-           value="21.T11981/6ab464ed-978b-4996-876f-f68ea913a308" placeholder="Search...">
+           value="sandboxed/355125826" placeholder="Search...">
     <button id="show-fdo-button" class="ui icon button" onClick="loadPid()">
         <i class="search icon"></i>
     </button>
@@ -54,9 +57,8 @@
 <div class="ui buttons">
     <button class="ui button" id="plainTypes" onClick="setRenderType(0)">Plain Record</button>
     <div class="or"></div>
-    <button class="ui positive button active" id="humanReadableTypes" onClick="setRenderType(1)">Interactive Record
+    <button class="ui positive button active" id="humanReadableTypes" onClick="setRenderType(1)">Interactive Record</button>
 </div>
-</button>
 
 <div class="ui vertical animated button" tabindex="0" style="width: 128px">
     <div class="hidden content" onclick="clearHistory()">Clear History</div>
@@ -129,7 +131,6 @@
 <!-- JS -->
 <script th:inline="javascript">
     const logo_encoded = "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";
-
     let currentUrl = window.location.href;
     let url = new URL(currentUrl);
     let userProvidedPid = url.searchParams.get("pid");
@@ -147,13 +148,9 @@
 
     /**PID Record table*/
     let table = null;
+
     /**Table columns for interactive mode*/
     let interactiveTableColumns = [
-        {
-            "title": "Index",
-            "field": "index",
-            "width": 100
-        },
         {
             "title": "Type",
             "field": "type",
@@ -170,11 +167,6 @@
 
     /**Table columns for plain mode*/
     let plainTableColumns = [
-        {
-            "title": "Index",
-            "field": "index",
-            "width": 100
-        },
         {
             "title": "Type",
             "field": "type",
@@ -209,6 +201,7 @@
 
     /**Current root PID (the one entered at the input field)*/
     let pid = null;
+    let resolver = null;
 
     let data = {"nodes":[], "links":[]};
 
@@ -265,13 +258,13 @@
     function renderCell(selection) {
         let value = selection._cell.value;
 
-        if(selection._cell.column.field == "type"){
+        if(selection._cell.column.field == resolver.keyFieldName){
             if (dataTypes.has(value)) {
                 let obj = dataTypes.get(value);
-                return "<a href='https://dtr-test.pidconsortium.eu/#objects/" + value + "' target='_blank'><i class='" + obj.class + "'>&nbsp;</i>" + obj.name + "</a>";
+                return "<a href='https://hdl.handle.net/" + value + "?locatt=view:ui' target='_blank'><i class='" + obj.class + "'>&nbsp;</i>" + obj.name + "</a>";
             }
-        }else if(selection._cell.column.field == "data.value"){
-            let type = selection._cell.row.cells[1].value;
+        }else if(selection._cell.column.field ==  resolver.valueFieldName){
+            let type = selection._cell.row.cells[0].value;
             if (dataTypes.has(type)) {
                 let obj = dataTypes.get(type);
                 return obj.renderer(type, value);
@@ -330,21 +323,23 @@
      */
     function loadPid() {
         pid = document.getElementById("pid_input").value;
-        let isFairDO = false;
-        let profilePid = null;
-        $.ajax({
-            url: "https://hdl.handle.net/api/handles/" + pid,
-            async: false,
-            success: function (json, status) {
-                for(let i=0;i<json.values.length;i++){
-                    if (json.values[i].type === "21.T11148/076759916209e5d62bd5") {
-                        //has profile property, is FAIR DO
-                        profilePid = json.values[i].data.value;
-                        isFairDO = true;
-                    }
-                }
-            }
-        });
+
+        if(pid.startsWith("sandboxed")){
+            resolver = new TPMLoader();
+        }else{
+            resolver = new HandleLoader();
+       }
+
+        plainTableColumns[0].field = resolver.keyFieldName;
+        plainTableColumns[1].field = resolver.valueFieldName;
+        interactiveTableColumns[0].field = resolver.keyFieldName;
+        interactiveTableColumns[1].field = resolver.valueFieldName;
+        setRenderType(1);
+
+        let response = resolver.checkForFDO(pid);
+
+        let isFairDO = response.isFairDO;
+        let profilePid = response.profilePid;
 
         if(!isFairDO){
             addMessage(1, "Provided PID " + pid + " is no FDO.");
@@ -377,15 +372,11 @@
     function resolveFDO(fdo) {
         addMessage(0, "Resolving new FDO with PID " + fdo);
         pid = fdo;
-
-        table.replaceData("https://hdl.handle.net/api/handles/" + fdo).then(function() {
-          /*if (!existing) {
-               renderTree();
-          }*/
-         renderTree();
-         createBadge(pid);
+        resolver.configureTableForReload(table, fdo).then(function() {
+        renderTree();
+        createBadge(pid);
         }).catch(function(error){
-            addMessage(1, "Failed to load FDO record from https://hdl.handle.net/api/handles/" + fdo);
+            addMessage(1, "Failed to load FDO record from http://localhost:8090/api/v1/pit/pid/" + fdo);
         });
     }
 
@@ -447,7 +438,6 @@
 
  mainMethod(options);
 
-
     /**Main method initially creating the table and the FDO graph.
      *
      * @param {object} options Options object for initializing the table.
@@ -471,7 +461,7 @@
         table = new Tabulator("#fairdoscope", {
             height: "80%", // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
             ajaxResponse: function (url, params, response) {
-                return response.values;
+                return response[resolver.valuesFieldName];
             },
             layout: "fitColumns", //fit columns to width of table (optional)
             columns: interactiveTableColumns,
