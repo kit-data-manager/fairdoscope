@@ -27,9 +27,9 @@ class HandleLoader {
             async: false,
             success: function (json, status) {
                 for(let i=0;i<json.values.length;i++){
-                    if (json.values[i].key === "21.T11148/076759916209e5d62bd5") {
+                    if (json.values[i].type === "21.T11148/076759916209e5d62bd5") {
                         //has profile property, is FAIR DO
-                        response.profilePid = json.values[i].value;
+                        response.profilePid = json.values[i].data.value;
                         response.isFairDO = true;
                     }
                 }
