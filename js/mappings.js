@@ -75,6 +75,7 @@ dataTypes.set("21.T11148/af11e18f83466642c47d", {'name': 'provenanceGraph', 'cla
 dataTypes.set("21.T11148/59071da0d09ae46f1126", {'name': 'label', 'class':'fa-solid fa-tag', 'renderer': renderUrl});
 dataTypes.set("21.T11148/bca3915764ce207253f5", {'name': 'imageFormat', 'class':'fa-solid fa-image', 'renderer': renderText});
 dataTypes.set("21.T11148/49330041ca5fddf9af92", {'name': 'schemaLocation', 'class':'fa-solid fa-file-circle-exclamation', 'renderer': renderUrl});
+dataTypes.set("21.T11148/aafd5fb4c7222e2d950a", {'name': 'dateCreated', 'class':'fa-solid fa-file-circle-plus', 'renderer': renderText});
 
 //BIO
 dataTypes.set("pid", {'name': 'pid', 'class':'fa-solid fa-fingerprint', 'renderer': renderUrl});
