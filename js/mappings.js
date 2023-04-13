@@ -10,7 +10,7 @@ function renderHdl(type,value){
         url: "https://hdl.handle.net/api/handles/" + value,
         async: false,
         success: function (json, status) {
-            console.log(json.values);
+            //console.log(json.values);
             for(let i=0;i<json.values.length;i++){
                 if (json.values[i].type === "21.T11148/076759916209e5d62bd5") {
                     //has profile property, is FAIR DO
@@ -56,6 +56,8 @@ dataTypes.set("21.T11148/c692273deb2772da307f", {'name': 'version', 'class':'fa-
 dataTypes.set("21.T11148/1c699a5d1b4ad3ba4956", {'name': 'digitalObjectType', 'class':'fa-solid fa-file-image', 'renderer': renderHdl});
 dataTypes.set("21.T11148/2f314c8fe5fb6a0063a8", {'name': 'licenseUrl', 'class':'fa-solid fa-closed-captioning', 'renderer': renderUrl});
 dataTypes.set("21.T11148/1a73af9e7ae00182733b", {'name': 'contact', 'class':'fa-solid fa-address-card', 'renderer': renderUrl});
+dataTypes.set("21.T11148/b415e16fbe4ca40f2270", {'name': 'topic', 'class':'fa-solid fa-tag', 'renderer': renderUrl});
+
 //Helmholtz-KIP relational attributes
 dataTypes.set("21.T11148/d0773859091aeb451528", {'name': 'hasMetadata', 'class':'fa-solid fa-file-import', 'renderer': renderHdl});
 dataTypes.set("21.T11148/4fe7cde52629b61e3b82", {'name': 'isMetadataFor', 'class':'fa-solid fa-file-export', 'renderer': renderHdl});
@@ -70,9 +72,10 @@ dataTypes.set("21.T11148/af11e18f83466642c47d", {'name': 'provenanceGraph', 'cla
 
 
 //AI
-dataTypes.set("21.T11148/59071da0d09ae46f1126", {'name': 'label', 'class':'fa-solid fa-tag', 'renderer': renderText});
+dataTypes.set("21.T11148/59071da0d09ae46f1126", {'name': 'label', 'class':'fa-solid fa-tag', 'renderer': renderUrl});
 dataTypes.set("21.T11148/bca3915764ce207253f5", {'name': 'imageFormat', 'class':'fa-solid fa-image', 'renderer': renderText});
 dataTypes.set("21.T11148/49330041ca5fddf9af92", {'name': 'schemaLocation', 'class':'fa-solid fa-file-circle-exclamation', 'renderer': renderUrl});
+dataTypes.set("21.T11148/aafd5fb4c7222e2d950a", {'name': 'dateCreated', 'class':'fa-solid fa-file-circle-plus', 'renderer': renderText});
 
 //BIO
 dataTypes.set("pid", {'name': 'pid', 'class':'fa-solid fa-fingerprint', 'renderer': renderUrl});

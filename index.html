@@ -54,9 +54,9 @@
         <div class="sixteen wide column">
             <div class="ui fluid icon input">
                 <input id="pid_input" type="text" value="21.T11981/6ab464ed-978b-4996-876f-f68ea913a308"
-                       placeholder="Base-Repo base URL...">
+                       placeholder="FAIR Digital Object PID">
                 <i class="search icon"></i>
-                <div id="show-fdo-button" class="ui vertical animated button" tabindex="0">
+                <div id="show-fdo-button" class="ui vertical animated button" onClick="loadPid()" tabindex="0">
                     <div class="hidden content">Reload</div>
                     <div class="visible content">
                         <i class="fa-solid fa-arrows-rotate"></i>
@@ -64,6 +64,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <div class="ui grid container">
@@ -361,10 +362,8 @@
         plainTableColumns[1].field = resolver.valueFieldName;
         interactiveTableColumns[0].field = resolver.keyFieldName;
         interactiveTableColumns[1].field = resolver.valueFieldName;
-        setRenderType(1);
 
         let response = resolver.checkForFDO(pid);
-
         let isFairDO = response.isFairDO;
         let profilePid = response.profilePid;
 
@@ -384,6 +383,8 @@
         data.nodes.push(node);
         // }
 
+        //set renderers to trigger start rendering
+        setRenderType(1);
         if (!fdoHistory.includes(pid)) {
             fdoHistory.push(pid);
             localStorage.setItem("fdoHistory", JSON.stringify(fdoHistory));
