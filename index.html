@@ -10,7 +10,7 @@
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.2.7/dist/js/tabulator.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
-    <script src="./js/semantic.min.js"></script>
+    <script src="./js/semantic-ui/semantic.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.7.1/ace.min.js"
             integrity="sha512-7Jmn5XgQKvX7kd2yARvOywZYQfC6eB7WLLdpWfGifPHe+93PwGf2BpkrX/vPRgPxllivNDnD8TSMHpYb60opMg=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -25,8 +25,11 @@
     <script src="./js/mappings.js"></script>
     <script src="./js/ArcGraph.js"></script>
 
-    <script src="./js/semantic-ui/transition.js"></script>
-    <script src="./js/semantic-ui/dropdown.js"></script>
+    <!--script src="./js/semantic-ui/transition.js"></script>
+    <script src="./js/semantic-ui/dropdown.js"></script-->
+    <script src="./js/semantic-ui/transition.min.js"></script>
+    <script src="./js/semantic-ui/dropdown.min.js"></script>
+
 
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
     <link href="https://unpkg.com/tabulator-tables@5.2.7/dist/css/tabulator_materialize.min.css" rel="stylesheet">
@@ -36,9 +39,8 @@
 
 </head>
 
-<body>
-
-<h1 class="ui header">
+<body class="ui">
+<h1 class="ui block header">
     <img src="./images/logo.png" class="ui circular image">
     <div class="content">
         FAIR-DOscope
@@ -46,88 +48,113 @@
     </div>
 </h1>
 
-<div class="ui action input">
-    <input id="pid_input" style="width: 428px" type="text"
-           value="sandboxed/355125826" placeholder="Search...">
-    <button id="show-fdo-button" class="ui icon button" onClick="loadPid()">
-        <i class="search icon"></i>
-    </button>
-</div>
+<div class="ui container">
 
-<div class="ui buttons">
-    <button class="ui button" id="plainTypes" onClick="setRenderType(0)">Plain Record</button>
-    <div class="or"></div>
-    <button class="ui positive button active" id="humanReadableTypes" onClick="setRenderType(1)">Interactive Record</button>
-</div>
-
-<div class="ui vertical animated button" tabindex="0" style="width: 128px">
-    <div class="hidden content" onclick="clearHistory()">Clear History</div>
-    <div class="visible content" >
-        <i class="trash alternate icon"></i>
-    </div>
-</div>
-
-<div class="ui column grid" style="margin-top: 20px">
-    <div class="ten wide column">
-        <h4 class="ui header">
-            <i class="table icon"></i>
-            <div class="content">
-                PID Information Record
+    <div class="ui grid container">
+        <div class="sixteen wide column">
+            <div class="ui fluid icon input">
+                <input id="pid_input" type="text" value="21.T11981/6ab464ed-978b-4996-876f-f68ea913a308"
+                       placeholder="Base-Repo base URL...">
+                <i class="search icon"></i>
+                <div id="show-fdo-button" class="ui vertical animated button" tabindex="0">
+                    <div class="hidden content">Reload</div>
+                    <div class="visible content">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </div>
+                </div>
             </div>
-        </h4>
-        <div class="ui segment">
-            <div id="fairdoscope"></div>
         </div>
     </div>
-    <div class="five wide column">
-        <h4 class="ui header">
-            <i class="tag icon"></i>
-            <div class="content">
-                FDO Badge
-            </div>
-        </h4>
-        <div class="ui segment" style="min-width: 512px; max-width: 512px">
-            <div style="margin-left:-4px" id="badges">
-            </div>
 
-            <div class="ui floating dropdown labeled icon button">
-                <i class="copy icon"></i>
-                <span class="text">Copy as</span>
-                <div class="menu">
-                    <div class="item">HTML</div>
-                    <div class="item">Markdown</div>
+    <div class="ui grid container">
+        <div class="sixteen wide column">
+            <div class="ui buttons">
+                <button class="ui button" id="plainTypes" onClick="setRenderType(0)">Plain Record</button>
+                <div class="or"></div>
+                <button class="ui positive button active" id="humanReadableTypes" onClick="setRenderType(1)">
+                    Interactive Record
+                </button>
+                <div class="ui vertical animated button" tabindex="0" style="width: 128px">
+                    <div class="hidden content" onclick="clearHistory()">Clear History</div>
+                    <div class="visible content">
+                        <i class="trash alternate icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="ui stackable grid container" style="margin-top: 20px">
+        <div class="ten wide column">
+            <h4 class="ui header">
+                <i class="table icon"></i>
+                <div class="content">
+                    PID Information Record
+                </div>
+            </h4>
+            <div class="ui segment">
+                <div id="fairdoscope"></div>
+            </div>
+        </div>
+
+        <div class="five wide column">
+            <h4 class="ui header">
+                <i class="tag icon"></i>
+                <div class="content">
+                    FDO Badge
+                </div>
+            </h4>
+            <div class="ui segment" >
+                <div style="margin-left:-4px" id="badges">
+                </div>
+
+                <div class="ui floating dropdown labeled icon button">
+                    <i class="copy icon"></i>
+                    <span class="text">Copy as</span>
+                    <div class="menu">
+                        <div class="item">HTML</div>
+                        <div class="item">Markdown</div>
+                    </div>
                 </div>
             </div>
 
-        </div>
-        <h4 class="ui header">
-            <i class="sitemap icon"></i>
-            <div class="content">
-                FAIR DO Graph
+            <h4 class="ui header">
+                <i class="sitemap icon"></i>
+                <div class="content">
+                    FAIR DO Graph
+                </div>
+            </h4>
+            <div class="ui segment">
+                <svg id="tree"/>
             </div>
-        </h4>
-        <div class="ui segment" style="min-width: 512px; max-width: 512px">
-            <svg id="tree"/>
         </div>
 
-    </div>
-    <div class="fourteen wide column">
-        <h4 class="ui header">
-            <i class="info circle icon"></i>
-            <div class="content">
-                Messages
+
+        <div class="sixteen wide column">
+            <h4 class="ui header">
+                <i class="info circle icon"></i>
+                <div class="content">
+                    Messages
+                </div>
+            </h4>
+            <div class="four column ui stackable grid">
+                <div class="column">
+                    <button class="ui primary basic fluid button" onclick="removeMessages(0)">Remove All</button>
+                </div>
+                <div class="column">
+                    <button class="ui positive basic fluid button" onclick="removeMessages(1)">Remove Information</button>
+                </div>
+                <div class="column">
+                    <button class="ui negative basic fluid button" onclick="removeMessages(2)">Remove Error</button>
+                </div>
             </div>
-        </h4>
-        <button class="ui primary basic button" onclick="removeMessages(0)">Remove All</button>
-        <button class="ui positive basic button" onclick="removeMessages(1)">Remove Information</button>
-        <button class="ui negative basic button" onclick="removeMessages(2)">Remove Error</button>
-        <div id="messages" class="ui segment">
-            <!--messages will go here-->
+            <div id="messages" class="ui segment">
+                <!--messages will go here-->
+            </div>
         </div>
     </div>
 </div>
-
-
 <!-- JS -->
 <script th:inline="javascript">
     const logo_encoded = "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";
@@ -203,9 +230,9 @@
     let pid = null;
     let resolver = null;
 
-    let data = {"nodes":[], "links":[]};
+    let data = {"nodes": [], "links": []};
 
-    function getBadgeElement(pid, type){
+    function getBadgeElement(pid, type) {
         let badgeUrl = "https://img.shields.io/badge/FAIR%20DO-" + encodeURIComponent(pid).replaceAll("-", "--") + "-green?logo=data:image/png;base64," + logo_encoded;
         let result = undefined;
 
@@ -215,15 +242,15 @@
 
         let targetUrl = url.toString();
 
-        if(type == "html"){
-            result = "<a href='" + targetUrl + "'><img src='" + badgeUrl + "'></img></a>";
-        }else  if(type == "markdown"){
+        if (type == "html") {
+            result = "<a href='" + targetUrl + "'><img src='" + badgeUrl + "' style='width: 100%'></img></a>";
+        } else if (type == "markdown") {
             result = "[![FAIRDO](" + badgeUrl + ")](" + targetUrl + ")";
         }
         return result;
     }
 
-    function createDummyBadge(){
+    function createDummyBadge() {
         let badgeUrl = "https://img.shields.io/badge/FAIR%20DO-nothing%20selected-orange?logo=data:image/png;base64," + logo_encoded;
 
         let html = "<a href='" + pid + "'><img src='" + badgeUrl + "'></img></a>";
@@ -232,18 +259,18 @@
         $("#badges").append(html);
     }
 
-    function createBadge(pid){
+    function createBadge(pid) {
         $("#badges").empty();
         $("#badges").append(getBadgeElement(pid, "html"));
     }
 
     $('.ui.dropdown').dropdown({
         action: 'hide',
-        onChange: function(value, text, selectedItem) {
+        onChange: function (value, text, selectedItem) {
 
-            navigator.clipboard.writeText(getBadgeElement(pid, value)).then(function() {
+            navigator.clipboard.writeText(getBadgeElement(pid, value)).then(function () {
                 addMessage(0, "Badge copied to clipboard.");
-            }, function(err) {
+            }, function (err) {
                 addMessage(1, "Failed to copy badge clipboard.");
             });
         }
@@ -258,12 +285,12 @@
     function renderCell(selection) {
         let value = selection._cell.value;
 
-        if(selection._cell.column.field == resolver.keyFieldName){
+        if (selection._cell.column.field == resolver.keyFieldName) {
             if (dataTypes.has(value)) {
                 let obj = dataTypes.get(value);
                 return "<a href='https://hdl.handle.net/" + value + "?locatt=view:ui' target='_blank'><i class='" + obj.class + "'>&nbsp;</i>" + obj.name + "</a>";
             }
-        }else if(selection._cell.column.field ==  resolver.valueFieldName){
+        } else if (selection._cell.column.field == resolver.valueFieldName) {
             let type = selection._cell.row.cells[0].value;
             if (dataTypes.has(type)) {
                 let obj = dataTypes.get(type);
@@ -273,30 +300,30 @@
         return value;
     }
 
-     /**Add a child FDO. This function is called if the rendering function detects an FDO in one the the value fields of
+    /**Add a child FDO. This function is called if the rendering function detects an FDO in one the the value fields of
      * the PID record. In that case, a new FDO is added to the FDO graph and the graph gets updated.
      * @param {string} fdoPid The PID of the newly detected FDO.
      * @param {string} parentPid The PID of the parent FDO.
      */
     function addChildFdo(type, fdoPid, profile, parentPid) {
-        addMessage("Adding child FDO with pid " + fdoPid + " to parent " + parentPid);
+        addMessage(0, "Adding child FDO with pid " + fdoPid + " to parent " + parentPid);
 
         let existing = data.nodes.find((entry) => entry.id == fdoPid);
         let modified = false;
 
-        if(!existing){
-            let node = {"id":fdoPid, "profile": profile};
+        if (!existing) {
+            let node = {"id": fdoPid, "profile": profile};
             data.nodes.push(node);
-            let typeName = (dataTypes.get(type))?dataTypes.get(type).name:type;
-            let link = {"source":parentPid, "target":fdoPid, "type": typeName, "value":1};
+            let typeName = (dataTypes.get(type)) ? dataTypes.get(type).name : type;
+            let link = {"source": parentPid, "target": fdoPid, "type": typeName, "value": 1};
             data.links.push(link);
             modified = true;
-        }else{
+        } else {
             let existingConnection = data.links.find((entry) => (entry.source == parentPid && entry.target == fdoPid));
 
-            if(!existingConnection){
-                let typeName = (dataTypes.get(type))?dataTypes.get(type).name:type;
-                let link = {"source":parentPid, "target":fdoPid, "type": typeName, "value":1};
+            if (!existingConnection) {
+                let typeName = (dataTypes.get(type)) ? dataTypes.get(type).name : type;
+                let link = {"source": parentPid, "target": fdoPid, "type": typeName, "value": 1};
                 data.links.push(link);
                 modified = true;
             }/*else{
@@ -308,12 +335,12 @@
             }*/
         }
 
-        if(!fdoHistory.includes(fdoPid)) {
+        if (!fdoHistory.includes(fdoPid)) {
             fdoHistory.push(fdoPid);
             localStorage.setItem("fdoHistory", JSON.stringify(fdoHistory));
         }
 
-        if(modified) {
+        if (modified) {
             renderTree();
         }
     }
@@ -324,11 +351,11 @@
     function loadPid() {
         pid = document.getElementById("pid_input").value;
 
-        if(pid.startsWith("sandboxed")){
+        if (pid.startsWith("sandboxed")) {
             resolver = new TPMLoader();
-        }else{
+        } else {
             resolver = new HandleLoader();
-       }
+        }
 
         plainTableColumns[0].field = resolver.keyFieldName;
         plainTableColumns[1].field = resolver.valueFieldName;
@@ -341,7 +368,7 @@
         let isFairDO = response.isFairDO;
         let profilePid = response.profilePid;
 
-        if(!isFairDO){
+        if (!isFairDO) {
             addMessage(1, "Provided PID " + pid + " is no FDO.");
             //continue and try to deal with it somehow
             // return;
@@ -351,10 +378,10 @@
 
         // let existing = data.nodes.find((entry) => entry.id == pid);
         // if(!existing){
-            //reset data
-            data = {"nodes":[], "links":[]};
-            let node = {"id":pid, "profile": profilePid};
-            data.nodes.push(node);
+        //reset data
+        data = {"nodes": [], "links": []};
+        let node = {"id": pid, "profile": profilePid};
+        data.nodes.push(node);
         // }
 
         if (!fdoHistory.includes(pid)) {
@@ -372,10 +399,10 @@
     function resolveFDO(fdo) {
         addMessage(0, "Resolving new FDO with PID " + fdo);
         pid = fdo;
-        resolver.configureTableForReload(table, fdo).then(function() {
-        renderTree();
-        createBadge(pid);
-        }).catch(function(error){
+        resolver.configureTableForReload(table, fdo).then(function () {
+            renderTree();
+            createBadge(pid);
+        }).catch(function (error) {
             addMessage(1, "Failed to load FDO record from http://localhost:8090/api/v1/pit/pid/" + fdo);
         });
     }
@@ -416,16 +443,16 @@
         }
     }
 
-    function createFdoNodeName(d){
+    function createFdoNodeName(d) {
         let profileName = profiles.get(d.profile) ? profiles.get(d.profile).name : d.profile
         return `PID: ${d.id}\nProfile: ${profileName}`;
     }
 
     /**Render the current FDO graph.*/
     function renderTree() {
-       d3.select("svg").selectAll('*').remove();
-       //ForceGraph
-       ArcGraph(data, {
+        d3.select("svg").selectAll('*').remove();
+        //ForceGraph
+        ArcGraph(data, {
             nodeId: d => d.id,
             nodeGroup: d => d.profile,
             nodeTitle: d => createFdoNodeName(d),
@@ -436,22 +463,22 @@
         });
     }
 
- mainMethod(options);
+    mainMethod(options);
 
     /**Main method initially creating the table and the FDO graph.
      *
      * @param {object} options Options object for initializing the table.
      */
     function mainMethod(options) {
-        if(localStorage.getItem("fdoHistory")){
+        if (localStorage.getItem("fdoHistory")) {
             let historicalData = JSON.parse(localStorage.getItem("fdoHistory"));
             for (let i = 0; i < historicalData.length; i++) {
                 fdoHistory.push(historicalData[i]);
             }
-            addMessage(0, "Loaded " + fdoHistory.length  + " PIDs from history.");
+            addMessage(0, "Loaded " + fdoHistory.length + " PIDs from history.");
         }
 
-        $( "#pid_input" ).autocomplete({
+        $("#pid_input").autocomplete({
             source: fdoHistory
         });
 
@@ -463,7 +490,7 @@
             ajaxResponse: function (url, params, response) {
                 return response[resolver.valuesFieldName];
             },
-            layout: "fitColumns", //fit columns to width of table (optional)
+            layout: "fitDataFill", //fit columns to width of table (optional)
             columns: interactiveTableColumns,
         });
 
@@ -471,13 +498,13 @@
             addMessage(1, "Failed to load FDO from " + error.url + " (Status: " + error.status + ")");
         });
         table.on("tableBuilt", function (error) {
-        if (userProvidedPid) {
-            addMessage(0, "Loading PID " + userProvidedPid + " from query parameter.");
-            $("#pid_input").attr("value", userProvidedPid);            
-            loadPid();
-        }
+            if (userProvidedPid) {
+                addMessage(0, "Loading PID " + userProvidedPid + " from query parameter.");
+                $("#pid_input").attr("value", userProvidedPid);
+                loadPid();
+            }
         });
- 
+
     }
 
     /**UUID creation helper for creating unique instances of Ace editor and message elements.*/
@@ -541,7 +568,7 @@
         }
     }
 
-    function clearHistory(){
+    function clearHistory() {
         localStorage.removeItem("fdoHistory");
         addMessage(0, "History cleared.");
     }
