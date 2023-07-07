@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Jejkal"
+  given-names: "Thomas"
+  affiliation: Karlsruhe Institute of Technology
+  email: thomas.jejkal@kit.edu
+  orcid: "https://orcid.org/0000-0003-2804-688X"
+title: "FAIR-DOscope"
+type: software
+abstract: FAIR-DOscope is an easy-to-use, generic FAIR Digital Object viewer and browser accepting PIDs of FAIR DOs and presenting the associated PID record in a graphical and user-friendly way. It offers a tabular view of the contents of a PID record and a graphical representation of related FAIR DOs.
+date-released: 2022-10-21
+url: "https://github.com/kit-data-manager/fairdoscope"
+repository-code: "https://github.com/kit-data-manager/fairdoscope"
+license: Apache-2.0
