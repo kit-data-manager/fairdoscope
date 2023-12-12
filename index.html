@@ -21,6 +21,7 @@
             integrity="sha512-uXfi0GwpQZcHIhGOMMHeNYtBSjt7qDXjXHmjShWSp+RWMSmjdy69N7M/pufinvQLv6rSYlpbSXqSnLRzWE952w=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7.6.1/dist/d3.min.js"></script>
+    <script type='module' src='https://unpkg.com/@kit-data-manager/pid-component'></script>
 
     <script src="./js/mappings.js"></script>
     <script src="./js/ArcGraph.js"></script>
@@ -128,6 +129,21 @@
             </h4>
             <div class="ui segment">
                 <svg id="tree"/>
+            </div>
+
+            <h4 class="ui header">
+                <i class="html5 icon"></i>
+                <div class="content">
+                    PID Component
+                </div>
+            </h4>
+            <div class="ui segment">
+                <pid-component id="pidcom" value="None"></pid-component><br/>
+                <div id="copycode" class="ui labeled button">
+                    <div class="ui button">
+                        <i class="code icon"></i> Copy Code
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -272,9 +288,27 @@
             navigator.clipboard.writeText(getBadgeElement(pid, value)).then(function () {
                 addMessage(0, "Badge copied to clipboard.");
             }, function (err) {
-                addMessage(1, "Failed to copy badge clipboard.");
+                addMessage(1, "Failed to copy badge to clipboard.");
             });
         }
+    });
+
+    $('#copycode').click(() => {
+        let code = "<html>\n";
+        code += "<head>\n";
+        code += "\<script type='module' src='https://unpkg.com/@kit-data-manager/pid-component'\>\</script\>\n";
+        code += "</head>\n";
+        code += "<body>\n";
+        code += "<pid-component value=\"" + $("#pidcom").attr("value") + "\"></pid-component>\n";
+        code += "</body>\n";
+        code += "</html>";
+
+        navigator.clipboard.writeText(code).then(function () {
+            addMessage(0, "Code copied to clipboard.");
+        }, function (err) {
+            addMessage(1, "Failed to copy code clipboard.");
+        });
+
     });
 
 
@@ -351,6 +385,7 @@
      */
     function loadPid() {
         pid = document.getElementById("pid_input").value;
+        $("#pidcom").attr("value", pid);
 
         if (pid.startsWith("sandboxed")) {
             resolver = new TPMLoader();

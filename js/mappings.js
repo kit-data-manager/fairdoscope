@@ -22,7 +22,10 @@ function renderHdl(type,value){
                     break;
                 }
             }
-       }
+       },
+        error: function (status) {
+
+        }
     });
 
     if(isType){
@@ -31,7 +34,10 @@ function renderHdl(type,value){
     }else if(isFairDO) {
         addChildFdo(type, value, profilePid, pid);
         return "<a href='#' onClick=resolveFDO(\'" + value + "\')>" + value + "&nbsp;<i class=\"fa-solid fa-arrows-rotate\"></i></a>";
-    }
+    }/*else if(value.startsWith("sandboxed")) {
+        addChildFdo(type, value, "21.T11148/b9b76f887845e32d29f7", pid);
+        return "<a href='#' onClick=resolveFDO(\'" + value + "\')>" + value + "&nbsp;<i class=\"fa-solid fa-arrows-rotate\"></i></a>";
+    }*/
 }
 
 function renderText(type, value){
@@ -49,6 +55,7 @@ let dataTypes = new Map();
 //HelmholtzKIP
 dataTypes.set("21.T11148/076759916209e5d62bd5", {'name': 'kernelInformationProfile', 'class':'fa-solid fa-table-list', 'renderer': renderHdl});
 dataTypes.set("21.T11148/397d831aa3a9d18eb52c", {'name': 'dateModified', 'class':'fa-solid fa-file-pen', 'renderer': renderText});
+dataTypes.set("21.T11148/dcd4e99d26a00b8132f8", {'name': 'accessProtocol', 'class':'fa-solid fa-right-left', 'renderer': renderText});
 dataTypes.set("21.T11148/82e2503c49209e987740", {'name': 'checksum', 'class':'fa-solid fa-hashtag', 'renderer': renderText});
 dataTypes.set("21.T11148/29f92bd203dd3eaa5a1f", {'name': 'dateCreated', 'class':'fa-solid fa-file-circle-plus', 'renderer': renderText});
 dataTypes.set("21.T11148/b8457812905b83046284", {'name': 'digitalObjectLocation', 'class':'fa-solid fa-location-dot', 'renderer': renderUrl});
